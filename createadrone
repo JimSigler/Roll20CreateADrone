@@ -1,0 +1,201 @@
+on("chat:message", function(msg){
+    if(msg.type == "api" && msg.content.indexOf("!createDrone") == 0){
+       let selected = msg.selected;
+       if(selected === undefined){
+           sendChat("API", "You need to select a character first.");
+           return;
+       }
+       let messageText = msg.content.split(" ");
+        //log(messageText[1]);
+
+       if(messageText.length < 2){
+           sendChat("API", "Must specify drone type.");
+           return;
+       }
+       let tokenID = getObj("graphic", selected[0]._id);
+       let character = getObj("character", tokenID.get("represents"));
+       let player = getObj("player", character.get("controlledby"));
+       
+       let typeOfDrone = "mosquito";
+       
+       // default drone settings
+       // special settings will be done in the switch statement
+       let droneToCreate = {
+           left:tokenID.get("left") + 70,
+           top: tokenID.get("top"),
+           height: 70,
+           width: 70,
+           pageid: tokenID.get("pageid"),
+           layer: "objects", 
+           controlledby: player.get("id"),
+           showname: true,
+           showplayers_name: true,
+       };
+       switch(messageText[1]){
+           case "bumblebee":
+            case "bumble":
+               let bee = findObjs({name: "Bumble Bee Drone"});
+               if(bee === undefined){
+                   sendChat("API", "Unable to find Bumble Bee Drone.");
+                   return;
+               }
+               droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201442422/bDMeiYJzitAKJi6Znnn_kw/thumb.png?1613450544";
+               droneToCreate.name = "Bumble Bee Drone";
+               droneToCreate.represents = bee[0].get("_id");
+               droneToCreate.has_bright_light_vision = true;
+               droneToCreate.emits_bright_light = true;
+               droneToCreate.bright_light_distance = 20;
+               typeOfDrone = "bumble bee";
+               break;
+            case "bat":
+                let bat = findObjs({name: "The Bat Drone"});
+                   if(bat === undefined){
+                       sendChat("API", "Bat Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520131/dizeDIVz_qrImm-2Q_E6zQ/thumb.png?1613494190";
+                droneToCreate.name = "Bat Drone";
+                droneToCreate.represents = bat[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.emits_bright_light = true;
+                droneToCreate.bright_light_distance = 40;
+                typeOfDrone = "bat";
+                break;
+            case "hummingbird":
+                let hum = findObjs({name: "Hummingbird Drone"});
+                   if(hum === undefined){
+                       sendChat("API", "Hummingbird Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520190/5sRiCXXURsHq-Gu0eIC2OQ/thumb.png?1613494200";
+                droneToCreate.name = "Hummingbird Drone";
+                droneToCreate.represents = hum[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.emits_bright_light = true;
+                droneToCreate.bright_light_distance = 50;
+                typeOfDrone = "hummingbird";
+                break;
+            case "stinger":
+                let sting = findObjs({name: "The Stinger Drone"});
+                   if(sting === undefined){
+                       sendChat("API", "Stinger Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520306/S2w3ZMijbPG_ABAoVXk4nA/thumb.png?1613494228";
+                droneToCreate.name = "The Stinger Drone";
+                droneToCreate.represents = sting[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                typeOfDrone = "stinger";
+                break;
+            case "scarab":
+                let scarab = findObjs({name: "The Scarab Drone"});
+                   if(scarab === undefined){
+                       sendChat("API", "Scarab Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520290/jiUtQToMSuFumWHEf4OIcA/thumb.png?1613494222";
+                droneToCreate.name = "The Scarab Drone";
+                droneToCreate.represents = scarab[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                typeOfDrone = "scarab";
+                break;
+            case "beetle":
+                let beetle = findObjs({name: "The Beetle Drone"});
+                   if(beetle === undefined){
+                       sendChat("API", "Beetle Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520170/eFtFQrhy_FgR-QEyiTcJHA/thumb.png?1613494195";
+                droneToCreate.name = "The Beetle Drone";
+                droneToCreate.represents = beetle[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                typeOfDrone = "beetle";
+                break;
+            case "jammer1":
+                let jam1 = findObjs({name: "Jammer Drone Mark 1"});
+                   if(jam1 === undefined){
+                       sendChat("API", "Jammer Drone Mark 1 doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520203/C91_AsEKQmnxLk6yMp2-_A/thumb.png?1613494205";
+                droneToCreate.name = "Jammer Drone Mark 1";
+                droneToCreate.represents = jam1[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.aura1_radius = 20;
+                droneToCreate.aura1_color = "#f9cb9c";
+                droneToCreate.showplayers_aura1 = true;
+                typeOfDrone = "Jammer Mark 1";
+                break;
+            case "jammer2":
+                let jam2 = findObjs({name: "Jammer Drone Mark 2"});
+                   if(jam2 === undefined){
+                       sendChat("API", "Jammer Drone Mark 2 doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520224/dPDfDLzMvUOe7bg0yv7_mA/thumb.png?1613494210";
+                droneToCreate.name = "Jammer Drone Mark 2";
+                droneToCreate.represents = jam2[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.aura1_radius = 20;
+                droneToCreate.aura1_color = "#ea9999";
+                droneToCreate.showplayers_aura1 = true;
+                typeOfDrone = "Jammer Mark 2";
+                break;
+            case "jammer3":
+                let jam3 = findObjs({name: "Jammer Drone Mark 3"});
+                   if(jam3 === undefined){
+                       sendChat("API", "Jammer Drone Mark 3 doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520237/0Rxqys6jbppf6h9LP1Ie5Q/thumb.png?1613494215";
+                droneToCreate.name = "Jammer Drone Mark 3";
+                droneToCreate.represents = jam3[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.aura1_radius = 20;
+                droneToCreate.aura1_color = "#dd7e6b";
+                droneToCreate.showplayers_aura1 = true;
+                typeOfDrone = "Jammer Mark 3";
+                break;
+            case "wolfhound":
+                let wolf = findObjs({name: "The Wolfhound"});
+                   if(wolf === undefined){
+                       sendChat("API", "The Wolfhound doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201520346/gCGhtyn50L3AMMOPN3tzxg/thumb.png?1613494233";
+                droneToCreate.name = "The Wolfhound";
+                droneToCreate.represents = wolf[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.height = 140;
+                droneToCreate.width = 140;
+                droneToCreate.aura1_radius = 500;
+                droneToCreate.aura1_color = "#f9cb9c";
+                droneToCreate.showplayers_aura1 = true;
+                droneToCreate.emits_bright_light = true;
+                droneToCreate.bright_light_distance = 500;
+                typeOfDrone = "wolfhound";
+                break;
+            default:
+                let mosquito = findObjs({name: "Mosquito Drone"});
+                   if(mosquito === undefined){
+                       sendChat("API", "Mosquito Drone doesn't exist.");
+                       return;
+                   } 
+                droneToCreate.imgsrc = "https://s3.amazonaws.com/files.d20.io/images/201427202/rWnC_rzE4x-eWKYaiQ90mQ/thumb.png?1613444437";
+                droneToCreate.name = "Mosquito Drone";
+                droneToCreate.represents = mosquito[0].get("_id");
+                droneToCreate.has_bright_light_vision = true;
+                droneToCreate.emits_bright_light = true;
+                droneToCreate.bright_light_distance = 10;
+                break;
+       }
+       
+       
+       
+       
+       createObj("graphic", droneToCreate);
+       
+       sendChat(tokenID.get("name"), " launched a " + typeOfDrone +" drone.");
+       spawnFx(tokenID.get("left")+70, tokenID.get("top"), "bomb-smoke", tokenID.get("pageid"));
+    }
+});
